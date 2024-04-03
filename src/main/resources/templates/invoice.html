@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"></meta>
+    <title>Invoice</title>
+</head>
+<body>
+<div class="invoice"
+     style="width: 100%; margin: 0 auto; background-color: #fff; border: 1px solid black">
+    <h1 style="text-align: center">Invoice</h1>
+    <div class="invoice-items">
+        <table class="invoice-items__table" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+            <thead>
+            <tr>
+                <td colspan="2" style="border-right: 1px solid black;">
+                    <div class="invoice-header__seller" style="flex: 10px 0 0 10; padding: 5px 10px;">
+                        <p>Seller:</p>
+                        <p th:text="${seller}">XYZ Pvt. Ltd.</p>
+                        <p th:text="${sellerAddress}">New Delhi, India</p>
+                        <p th:text="${sellerGstin}">GSTIN: 29AABBCCDD121ZD</p>
+                    </div>
+                </td>
+                <td colspan="2" style="border-right: 1px solid black;">
+                    <div class="invoice-header__buyer" style="flex: 10px 0 0 10; padding: 10px;">
+                        <p>Buyer:</p>
+                        <p th:text="${buyer}">Vedant Computers</p>
+                        <p th:text="${buyerAddress}">New Delhi, India</p>
+                        <p th:text="${buyerGstin}">GSTIN: 29AABBCCDD131ZD</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid black; text-align: left; background-color: #f5f5f5;">Item
+                </th>
+                <th style="padding: 10px; border: 1px solid black; text-align: left; background-color: #f5f5f5;">
+                    Quantity
+                </th>
+                <th style="padding: 10px; border: 1px solid black; text-align: left; background-color: #f5f5f5;">Rate
+                </th>
+                <th style="padding: 10px; border: 1px solid black; text-align: left; background-color: #f5f5f5;">Amount
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td style="padding: 10px; border: 1px solid black; text-align: left;" th:text="*{item.name}">Product 1
+                </td>
+                <td style="padding: 10px; border: 1px solid black; text-align: left;" th:text="*{item.quantity}">12 Nos
+                </td>
+                <td style="padding: 10px; border: 1px solid black; text-align: left;" th:text="*{item.rate}">123.00</td>
+                <td style="padding: 10px; border: 1px solid black; text-align: left;" th:text="*{item.amount}">1476.00
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="invoice-footer">
+        <p style="text-align: center">Thank you for your business!</p>
+    </div>
+</div>
+</body>
+</html>
