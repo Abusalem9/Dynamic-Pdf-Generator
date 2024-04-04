@@ -2,12 +2,14 @@ package org.freightfox.dynamicpdfgenerator.controller;
 
 import org.freightfox.dynamicpdfgenerator.dto.InvoiceData;
 import org.freightfox.dynamicpdfgenerator.dto.Item;
+import org.freightfox.dynamicpdfgenerator.exception.PdfGenerationException;
 import org.freightfox.dynamicpdfgenerator.service.PdfService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,4 +62,33 @@ public class PdfControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(mockFileBytes, responseEntity.getBody());
     }
+
+    @Test
+    public void testGeneratePdf_PdfGenerationException() throws Exception {
+        // Create and populate InvoiceData
+        InvoiceData invoiceData = new InvoiceData();
+        invoiceData.setSeller("XYZ Pvt. Ltd.");
+
+        when(pdfService.generatePdf(invoiceData)).thenThrow(new PdfGenerationException("Error generating PDF", "PDF_GENERATION_ERROR", "Invalid data"));
+
+        ResponseEntity responseEntity = pdfController.generatePdf(invoiceData);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertTrue(responseEntity.getBody() instanceof PdfGenerationException);
+    }
+
+    @Test
+    public void testGeneratePdf_Exception() throws Exception {
+        // Create and populate InvoiceData
+        InvoiceData invoiceData = new InvoiceData();
+        invoiceData.setSeller("XYZ Pvt. Ltd.");
+
+        when(pdfService.generatePdf(invoiceData)).thenThrow(new Exception("Unexpected error"));
+
+        ResponseEntity responseEntity = pdfController.generatePdf(invoiceData);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertTrue(responseEntity.getBody() instanceof ErrorMessage);
+    }
+
 }
